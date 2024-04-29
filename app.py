@@ -119,10 +119,10 @@ if uploaded_file is not None:
     st.dataframe(dados_processados)
     
 # This function will convert a DataFrame into an Excel file in memory and return the data
-def to_excel(df):
+def to_excel(dados_processados):
     with BytesIO() as output:
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            df.to_excel(writer, index=False, sheet_name='Sheet1')
+            dados_processados.to_excel(writer, index=False, sheet_name='Sheet1')
             writer.save()  # This should now correctly save the workbook
         return output.getvalue()  # Fetch the in-memory data after saving
 
