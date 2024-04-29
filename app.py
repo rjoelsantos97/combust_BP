@@ -94,10 +94,12 @@ def process_data(frota, custos):
     # Selecionar as colunas desejadas para o output final
     colunas_output = ['REF', 'QTD', 'Valor Ajustado',  
                       'Matrícula', 'Centro analitico','IVA Incluído', 'Observação','Produto']
+    
+        # Filter out rows where the observation is "Não - NAPS"
+    custos_agregados = custos_agregados[custos_agregados['Observação'] != 'Não - NAPS']
     custos_combustivel_final = custos_agregados[colunas_output]
     
-    # Filter out rows where the observation is "Não - NAPS"
-    custos_combustivel_final = custos_agregados[custos_agregados['Observação'] != 'Não - NAPS']
+
 
     return custos_combustivel_final  # Return the aggregated DataFrame
 
