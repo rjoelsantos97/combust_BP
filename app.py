@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from io import BytesIO
+import xlsxwriter
 
 # Função para processar os dados
 def processar_dados(dados_combustivel):
