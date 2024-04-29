@@ -3,6 +3,14 @@ import pandas as pd
 from io import BytesIO
 import xlsxwriter
 
+# Define the to_excel function at the top of your script
+def to_excel(df):
+    with BytesIO() as output:
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='Sheet1')
+            writer.save()
+        return output.getvalue()
+
 # Função para processar os dados
 def processar_dados(dados_combustivel):
     # Mapeamento de matrículas para categorias e centros analíticos
@@ -109,6 +117,9 @@ st.title('Processador de Custos de Combustível')
 # File uploader permite ao usuário carregar seus próprios dados
 uploaded_file = st.file_uploader("Carregue o arquivo CUSTOS_COMBUSTIVEL", type=['xlsx'])
 
+# Initialize dados_processados as None to check later if it has been set
+dados_processados = None
+
 if uploaded_file is not None:
     # Se um arquivo for carregado, processar os dados
     custos_combustivel_raw = pd.read_excel(uploaded_file)
@@ -117,19 +128,13 @@ if uploaded_file is not None:
     # Exibir os dados processados na app
     st.write("Dados Processados:")
     st.dataframe(dados_processados)
-    
-# This function will convert a DataFrame into an Excel file in memory and return the data
-def to_excel(dados_processados):
-    with BytesIO() as output:
-        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            dados_processados.to_excel(writer, index=False, sheet_name='Sheet1')
-            writer.save()  # This should now correctly save the workbook
-        return output.getvalue()  # Fetch the in-memory data after saving
 
-# The Streamlit download button to provide the DataFrame as an Excel download
-st.download_button(
-    label="Download Excel",
-    data=to_excel(dados_processados),  # Pass the processed data DataFrame to the function
-    file_name="custos_combustivel_agregado_final.xlsx",
-    mime="application/vnd.ms-excel"
-)
+# Only display the download button if dados_processados has been set with processed data
+if dados_processados is not None:
+    st.download_button(
+        label="Download Excel",
+        data=to_excel(dados_processados),  # Pass the processed data DataFrame to the function
+        file_name="custos_combustivel_agregado_final.xlsx",
+        mime="application/vnd.ms-excel"
+    )    
+
