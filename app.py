@@ -1,17 +1,9 @@
 import streamlit as st
 import pandas as pd
+from io import BytesIO
 
-def main():
-    st.title("Custos de Combustível Agregados")
-    
-    # Carregar os dados das planilhas do Excel
-    dados_frota = pd.read_excel('FROTA_DETALHES.xlsx')
-    uploaded_file = st.file_uploader("Upload your file", type=["xlsx"])
-    if uploaded_file is not None:
-        custos_combustivel_raw = pd.read_excel(uploaded_file)
-    
-    # Resto do código...
-    
+# Função para processar os dados
+def processar_dados(dados_combustivel):
     # Mapeamento de matrículas para categorias e centros analíticos
     mapa_categoria = dados_frota.set_index('Matricula')['Categoria'].to_dict()
     mapa_centro_analitico = dados_frota.set_index('Matricula')['Centro analitico'].to_dict()
@@ -103,18 +95,40 @@ def main():
 
     # Selecionar as colunas desejadas para o output final
     colunas_output = ['REF', 'QTD', 'Valor Ajustado',  
-                      'Matrícula', 'Centro analitico','IVA Incluído', 'Observação','Produto']
+                    'Matrícula', 'Centro analitico','IVA Incluído', 'Observação','Produto']
     custos_combustivel_final = custos_agregados[colunas_output]
+    return custos_combustivel_final
 
-    # Mostrar os primeiros resultados
-    st.write("Resultados:")
-    st.dataframe(custos_combustivel_final.head())
+# Carregar os dados das planilhas do Excel
+dados_frota = pd.read_excel('FROTA_DETALHES.xlsx')
 
-    # Adicionar botão para download do arquivo
-    csv = custos_combustivel_final.to_csv(index=False)
-    b64 = base64.b64encode(csv.encode()).decode()  # Encode the CSV data as base64
-    href = f'<a href="data:file/csv;base64,{b64}" download="custos_combustivel.csv">Download CSV</a>'
-    st.markdown(href, unsafe_allow_html=True)
+# Streamlit app
+st.title('Processador de Custos de Combustível')
 
-if __name__ == "__main__":
-    main()
+# File uploader permite ao usuário carregar seus próprios dados
+uploaded_file = st.file_uploader("Carregue o arquivo CUSTOS_COMBUSTIVEL", type=['xlsx'])
+
+if uploaded_file is not None:
+    # Se um arquivo for carregado, processar os dados
+    custos_combustivel_raw = pd.read_excel(uploaded_file)
+    dados_processados = processar_dados(custos_combustivel_raw)
+    
+    # Exibir os dados processados na app
+    st.write("Dados Processados:")
+    st.dataframe(dados_processados)
+    
+    # Criar um link para download dos dados processados
+    def to_excel(df):
+        output = BytesIO()
+        writer = pd.ExcelWriter(output, engine='xlsxwriter')
+        df.to_excel(writer, index=False, sheet_name='Sheet1')
+        writer.save()
+        processed_data = output.getvalue()
+        return processed_data
+
+    st.download_button(
+        label="Download Excel",
+        data=to_excel(dados_processados),
+        file_name="custos_combustivel_agregado_final.xlsx",
+        mime="application/vnd.ms-excel"
+    )
