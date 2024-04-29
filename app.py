@@ -110,5 +110,11 @@ def main():
     st.write("Resultados:")
     st.dataframe(custos_combustivel_final.head())
 
+    # Adicionar botão para download do arquivo
+    csv = custos_combustivel_final.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()  # Encode the CSV data as base64
+    href = f'<a href="data:file/csv;base64,{b64}" download="custos_combustivel.csv">Download CSV</a>'
+    st.markdown(href, unsafe_allow_html=True)
+
 if __name__ == "__main__":
     main()
