@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from io import BytesIO  # Import BytesIO for in-memory data handling
 
 # Define the function to process the data
 def process_data(frota, custos):
