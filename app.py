@@ -119,20 +119,21 @@ if uploaded_file_custos:
     st.write("Preview of Processed Data:")
     st.dataframe(processed_data.head())
 
-    # Button to download the processed data
+    # Function to convert DataFrame to Excel format for download
     def to_excel(df):
         output = BytesIO()
-        writer = pd.ExcelWriter(output, engine='xlsxwriter')
-        df.to_excel(writer, index=False, sheet_name='Sheet1')
-        writer.save()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='Sheet1')
+            writer.save()
         processed_data = output.getvalue()
+        output.close()  # Ensure the buffer is closed after saving
         return processed_data
 
     st.download_button(
         label="Download processed data as Excel",
         data=to_excel(processed_data),
         file_name='CUSTOS_COMBUSTIVEL_AGREGADO_FINAL.xlsx',
-        mime='application/vnd.ms-excel'
+        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     )
 
 st.write("Upload the CUSTOS_COMBUSTIVEL.xlsx file to process and download the results.")
