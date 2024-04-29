@@ -3,7 +3,7 @@ import pandas as pd
 from io import BytesIO
 import xlsxwriter
 
-# Define the to_excel function at the top of your script
+# Função para converter DataFrame para Excel em memória e retornar para download
 def to_excel(df):
     with BytesIO() as output:
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
@@ -11,9 +11,9 @@ def to_excel(df):
             writer.save()
         return output.getvalue()
 
-# Função para processar os dados
-def processar_dados(dados_combustivel):
-    # Mapeamento de matrículas para categorias e centros analíticos
+# Função para processar os dados do arquivo custos_combustivel
+def processar_dados(custos_combustivel_raw):
+   # Mapeamento de matrículas para categorias e centros analíticos
     mapa_categoria = dados_frota.set_index('Matricula')['Categoria'].to_dict()
     mapa_centro_analitico = dados_frota.set_index('Matricula')['Centro analitico'].to_dict()
 
@@ -111,30 +111,24 @@ def processar_dados(dados_combustivel):
 # Carregar os dados das planilhas do Excel
 dados_frota = pd.read_excel('FROTA_DETALHES.xlsx')
 
-# Streamlit app
+# Iniciar aplicação Streamlit
 st.title('Processador de Custos de Combustível')
 
-# File uploader permite ao usuário carregar seus próprios dados
+# Upload de arquivos permite que o usuário carregue seus próprios dados
 uploaded_file = st.file_uploader("Carregue o arquivo CUSTOS_COMBUSTIVEL", type=['xlsx'])
-
-# Initialize dados_processados as None to check later if it has been set
-dados_processados = None
 
 if uploaded_file is not None:
     # Se um arquivo for carregado, processar os dados
     custos_combustivel_raw = pd.read_excel(uploaded_file)
     dados_processados = processar_dados(custos_combustivel_raw)
-    
     # Exibir os dados processados na app
     st.write("Dados Processados:")
     st.dataframe(dados_processados)
-
-
-
-if dados_processados is not None:
+    
+    # Botão de download dos dados processados
     st.download_button(
         label="Download Excel",
-        data=to_excel(dados_processados),  # Pass the processed data DataFrame to the function
+        data=to_excel(dados_processados),
         file_name="custos_combustivel_agregado_final.xlsx",
         mime="application/vnd.ms-excel"
-    )    
+    )
