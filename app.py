@@ -41,8 +41,8 @@ def process_data(frota, custos):
     # Mapeamento de proprietários para matrículas
     proprietarios_matriculas = {
         'EUGENIA VIEIRA': 'AS-17-HV',
-        'HELENA GOMES': 'AG-46-IR',
-        'INES AZEVEDO': 'AS-50-VS',
+        #'HELENA GOMES': 'AG-46-IR',
+        #'INES AZEVEDO': 'AS-50-VS',
         'JOSE AZEVEDO': 'AQ-99-HL'
     }
     custos_combustivel_raw['Matrícula'] = custos_combustivel_raw.apply(
@@ -53,7 +53,8 @@ def process_data(frota, custos):
     correcoes_matriculas = {
         'BF-20-EV': 'BF-02-EV',
         'BC-56-EU': 'BC-56-UE',
-        '39-PO-97': '39-PO-87'
+        '39-PO-97': '39-PO-87',
+        '02-UZ-92':'NA-NA-NA'
     }
     custos_combustivel_raw['Matrícula'] = custos_combustivel_raw['Matrícula'].replace(correcoes_matriculas)
     
