@@ -118,18 +118,18 @@ if uploaded_file is not None:
     st.write("Dados Processados:")
     st.dataframe(dados_processados)
     
-    # Criar um link para download dos dados processados
-    def to_excel(df):
-        output = BytesIO()
-        writer = pd.ExcelWriter(output, engine='xlsxwriter')
-        df.to_excel(writer, index=False, sheet_name='Sheet1')
-        writer.save()
-        processed_data = output.getvalue()
-        return processed_data
+# This function will convert a DataFrame into an Excel file in memory and return the data
+def to_excel(df):
+    with BytesIO() as output:
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='Sheet1')
+            writer.save()  # This should now correctly save the workbook
+        return output.getvalue()  # Fetch the in-memory data after saving
 
-    st.download_button(
-        label="Download Excel",
-        data=to_excel(dados_processados),
-        file_name="custos_combustivel_agregado_final.xlsx",
-        mime="application/vnd.ms-excel"
-    )
+# The Streamlit download button to provide the DataFrame as an Excel download
+st.download_button(
+    label="Download Excel",
+    data=to_excel(dados_processados),  # Pass the processed data DataFrame to the function
+    file_name="custos_combustivel_agregado_final.xlsx",
+    mime="application/vnd.ms-excel"
+)
