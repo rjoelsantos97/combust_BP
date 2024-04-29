@@ -54,6 +54,15 @@ def process_data(frota, custos):
         'BC-56-EU': 'BC-56-UE',
         '39-PO-97': '39-PO-87'
     }
+    custos_combustivel_raw['Matrícula'] = custos_combustivel_raw['Matrícula'].replace(correcoes_matriculas)
+    
+    # Agregar os custos por 'Produto' e 'Matrícula'
+    custos_agregados = custos_combustivel_raw.groupby(['Produto', 'Matrícula']).agg({
+        'Quantidade': 'sum',
+        'Valor líquido': 'sum',
+        'IVA': 'sum',
+        'Valor total a faturar': 'sum'
+    }).reset_index()    
     
     # Adicionar informações de 'FROTA_DETALHES' e outras colunas necessárias
     custos_agregados['Centro analitico'] = custos_agregados['Matrícula'].apply(buscar_centro_analitico)
