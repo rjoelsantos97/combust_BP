@@ -102,38 +102,32 @@ def process_data(frota, custos):
 # Streamlit app layout
 st.title('Vehicle Cost Processing App')
 
-# File uploader for COSTS
 uploaded_file_custos = st.file_uploader("Upload CUSTOS_COMBUSTIVEL.xlsx", type='xlsx')
-
 if uploaded_file_custos:
-    # Load the 'FROTA_DETALHES.xlsx' file from the directory
+    st.session_state.uploaded_file_custos = uploaded_file_custos
+
+if st.button('Process Data') and 'uploaded_file_custos' in st.session_state:
     dados_frota = pd.read_excel('FROTA_DETALHES.xlsx')
-
-    # Read the uploaded file
-    custos_combustivel_raw = pd.read_excel(uploaded_file_custos)
-
-    # Process the data
+    custos_combustivel_raw = pd.read_excel(st.session_state.uploaded_file_custos)
     processed_data = process_data(dados_frota, custos_combustivel_raw)
 
-    # Show preview of data
-    st.write("Preview of Processed Data:")
-    st.dataframe(processed_data.head())
+    if not processed_data.empty:
+        st.success('Data processed successfully!')
+        st.dataframe(processed_data)
 
-    # Function to convert DataFrame to Excel format for download
-    def to_excel(df):
-        output = BytesIO()
-        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            df.to_excel(writer, index=False, sheet_name='Sheet1')
+        # Save DataFrame to BytesIO object
+        towrite = BytesIO()
+        with pd.ExcelWriter(towrite, engine='openpyxl') as writer:
+            processed_data.to_excel(writer, index=False)
             writer.save()
-        processed_data = output.getvalue()
-        output.close()  # Ensure the buffer is closed after saving
-        return processed_data
+        towrite.seek(0)  # Go to the beginning of the BytesIO object
+        st.session_state.processed_data = towrite  # Save towrite in session_state
 
-    st.download_button(
-        label="Download processed data as Excel",
-        data=to_excel(processed_data),
-        file_name='CUSTOS_COMBUSTIVEL_AGREGADO_FINAL.xlsx',
-        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    )
+        st.download_button("Download Processed Data as Excel", towrite, "processed_data.xlsx", "application/vnd.ms-excel")
 
+# Ensure proper memory management and state update
+if 'uploaded_file_custos' not in st.session_state:
+    st.session_state.uploaded_file_custos = None
+
+# Additional app instructions or functionality
 st.write("Upload the CUSTOS_COMBUSTIVEL.xlsx file to process and download the results.")
