@@ -115,7 +115,7 @@ def process_data(custos_combustivel_raw, mapa_categoria, mapa_centro_analitico):
                          'Matrícula', 'Centro analitico','IVA Incluído', 'Observação','Produto']
        custos_combustivel_final = custos_agregados[colunas_output]
 
-    return custos_combustivel_final  # This should be the final DataFrame after your processing
+        return custos_combustivel_final  # This should be the final DataFrame after your processing
 
 def to_excel(df):
     with BytesIO() as output:
