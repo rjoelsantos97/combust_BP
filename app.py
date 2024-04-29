@@ -97,7 +97,7 @@ def process_data(frota, custos):
     custos_combustivel_final = custos_agregados[colunas_output]
 
 
-    return custos_agregados  # Return the aggregated DataFrame
+    return custos_combustivel_final  # Return the aggregated DataFrame
 
 # Streamlit app layout
 st.title('Vehicle Cost Processing App')
