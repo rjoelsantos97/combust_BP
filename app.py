@@ -138,4 +138,3 @@ if dados_processados is not None:
         file_name="custos_combustivel_agregado_final.xlsx",
         mime="application/vnd.ms-excel"
     )    
-
