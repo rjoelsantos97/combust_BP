@@ -115,22 +115,16 @@ if st.button('Process Data') and 'uploaded_file_custos' in st.session_state:
         st.success('Data processed successfully!')
         st.dataframe(processed_data)
 
-        # Function to convert DataFrame to Excel format for download
-        def to_excel(df):
-            output = BytesIO()
-            with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                df.to_excel(writer, index=False)
-                writer.save()  # This is correct within a 'with' block
-            output.seek(0)  # Go to the beginning of the BytesIO object after saving
-            return output
+        # Create an in-memory bytes buffer for the processed Excel file
+        towrite = BytesIO()
+        processed_data.to_excel(towrite, index=False, engine='openpyxl')  # Write DataFrame to Excel buffer
+        towrite.seek(0)  # Go to the beginning of the BytesIO object after writing
+        st.session_state.towrite = towrite  # Save the buffer in session_state for later use
 
-        # Use the session state to handle the in-memory file
-        st.session_state.processed_data = to_excel(processed_data)  # Save towrite in session_state
-
-        # Download button
+        # Download button for the Excel file
         st.download_button(
             "Download Processed Data as Excel",
-            st.session_state.processed_data,
+            st.session_state.towrite,
             "processed_data.xlsx",
             "application/vnd.ms-excel"
         )
