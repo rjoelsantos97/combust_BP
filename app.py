@@ -100,9 +100,9 @@ def process_data(frota, custos):
     return custos_combustivel_final  # Return the aggregated DataFrame
 
 # Streamlit app layout
-st.title('Vehicle Cost Processing App')
+st.title('Extrair valores a comprar - BP')
 
-uploaded_file_custos = st.file_uploader("Upload CUSTOS_COMBUSTIVEL.xlsx", type='xlsx')
+uploaded_file_custos = st.file_uploader("Faça upload ao ficheiro excel da BP", type='xlsx')
 if uploaded_file_custos:
     st.session_state.uploaded_file_custos = uploaded_file_custos
 
@@ -112,7 +112,7 @@ if st.button('Process Data') and 'uploaded_file_custos' in st.session_state:
     processed_data = process_data(dados_frota, custos_combustivel_raw)
 
     if not processed_data.empty:
-        st.success('Data processed successfully!')
+        st.success('Processamento efectuado com sucesso !')
         st.dataframe(processed_data)
 
         # Create an in-memory bytes buffer for the processed Excel file
@@ -120,11 +120,11 @@ if st.button('Process Data') and 'uploaded_file_custos' in st.session_state:
         processed_data.to_excel(towrite, index=False, engine='openpyxl')  # Write DataFrame to Excel buffer
         towrite.seek(0)  # Go to the beginning of the BytesIO object after writing
         st.session_state.towrite = towrite  # Save the buffer in session_state for later use
-        st.download_button("Baixar arquivo Excel processado", towrite, "resultado.xlsx", "application/vnd.ms-excel")
+        st.download_button("Descarregue aqui o arquivo", towrite, "resultado.xlsx", "application/vnd.ms-excel")
 
 # Clear the session state if the file is not uploaded
 if 'uploaded_file_custos' not in st.session_state:
     st.session_state.uploaded_file_custos = None
 
 # Additional instructions or functionality
-st.write("Upload the CUSTOS_COMBUSTIVEL.xlsx file to process and download the results.")
+st.write("Faça upload ao ficheiro da BP e descarregue o resumo por referencia e valor .")
