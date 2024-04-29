@@ -129,7 +129,8 @@ if uploaded_file is not None:
     st.write("Dados Processados:")
     st.dataframe(dados_processados)
 
-# Only display the download button if dados_processados has been set with processed data
+#Only display the download button if dados_processados has been set with processed data
+
 if dados_processados is not None:
     st.download_button(
         label="Download Excel",
