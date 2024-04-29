@@ -115,19 +115,29 @@ if st.button('Process Data') and 'uploaded_file_custos' in st.session_state:
         st.success('Data processed successfully!')
         st.dataframe(processed_data)
 
-        # Save DataFrame to BytesIO object
-        towrite = BytesIO()
-        with pd.ExcelWriter(towrite, engine='openpyxl') as writer:
-            processed_data.to_excel(writer, index=False)
-            writer.save()
-        towrite.seek(0)  # Go to the beginning of the BytesIO object
-        st.session_state.processed_data = towrite  # Save towrite in session_state
+        # Function to convert DataFrame to Excel format for download
+        def to_excel(df):
+            output = BytesIO()
+            with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                df.to_excel(writer, index=False)
+                writer.save()  # This is correct within a 'with' block
+            output.seek(0)  # Go to the beginning of the BytesIO object after saving
+            return output
 
-        st.download_button("Download Processed Data as Excel", towrite, "processed_data.xlsx", "application/vnd.ms-excel")
+        # Use the session state to handle the in-memory file
+        st.session_state.processed_data = to_excel(processed_data)  # Save towrite in session_state
 
-# Ensure proper memory management and state update
+        # Download button
+        st.download_button(
+            "Download Processed Data as Excel",
+            st.session_state.processed_data,
+            "processed_data.xlsx",
+            "application/vnd.ms-excel"
+        )
+
+# Clear the session state if the file is not uploaded
 if 'uploaded_file_custos' not in st.session_state:
     st.session_state.uploaded_file_custos = None
 
-# Additional app instructions or functionality
+# Additional instructions or functionality
 st.write("Upload the CUSTOS_COMBUSTIVEL.xlsx file to process and download the results.")
