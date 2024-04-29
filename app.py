@@ -3,13 +3,6 @@ import pandas as pd
 from io import BytesIO
 import xlsxwriter
 
-# Função para converter DataFrame para Excel em memória e retornar para download
-def to_excel(df):
-    with BytesIO() as output:
-        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            df.to_excel(writer, index=False, sheet_name='Sheet1')
-            writer.save()
-        return output.getvalue()
 
 # Função para processar os dados do arquivo custos_combustivel
 def processar_dados(custos_combustivel_raw):
@@ -116,6 +109,14 @@ st.title('Processador de Custos de Combustível')
 
 # Upload de arquivos permite que o usuário carregue seus próprios dados
 uploaded_file = st.file_uploader("Carregue o arquivo CUSTOS_COMBUSTIVEL", type=['xlsx'])
+
+# Função para converter DataFrame para Excel em memória e retornar para download
+def to_excel(df):
+    with BytesIO() as output:
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='Sheet1')
+            writer.save()
+        return output.getvalue()
 
 if uploaded_file is not None:
     # Se um arquivo for carregado, processar os dados
