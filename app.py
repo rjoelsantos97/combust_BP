@@ -92,13 +92,14 @@ def process_data(frota, custos):
 # Streamlit app layout
 st.title('Vehicle Cost Processing App')
 
-# File uploaders
-uploaded_file_frota = st.file_uploader("Upload FROTA_DETALHES.xlsx", type='xlsx')
+# File uploader for COSTS
 uploaded_file_custos = st.file_uploader("Upload CUSTOS_COMBUSTIVEL.xlsx", type='xlsx')
 
-if uploaded_file_frota and uploaded_file_custos:
-    # Read the Excel files
-    dados_frota = pd.read_excel(uploaded_file_frota)
+if uploaded_file_custos:
+    # Load the 'FROTA_DETALHES.xlsx' file from the directory
+    dados_frota = pd.read_excel('FROTA_DETALHES.xlsx')
+
+    # Read the uploaded file
     custos_combustivel_raw = pd.read_excel(uploaded_file_custos)
 
     # Process the data
@@ -108,18 +109,20 @@ if uploaded_file_frota and uploaded_file_custos:
     st.write("Preview of Processed Data:")
     st.dataframe(processed_data.head())
 
-    # Download button for the processed data
-    @st.cache
-    def convert_df(df):
-        return df.to_csv().encode('utf-8')
+    # Button to download the processed data
+    def to_excel(df):
+        output = BytesIO()
+        writer = pd.ExcelWriter(output, engine='xlsxwriter')
+        df.to_excel(writer, index=False, sheet_name='Sheet1')
+        writer.save()
+        processed_data = output.getvalue()
+        return processed_data
 
-    csv = convert_df(processed_data)
     st.download_button(
         label="Download processed data as Excel",
-        data=csv,
+        data=to_excel(processed_data),
         file_name='CUSTOS_COMBUSTIVEL_AGREGADO_FINAL.xlsx',
-        mime='text/csv',
+        mime='application/vnd.ms-excel'
     )
 
-# Instructions or additional information
-st.write("Upload the Excel files to process and download the results.")
+st.write("Upload the CUSTOS_COMBUSTIVEL.xlsx file to process and download the results.")
