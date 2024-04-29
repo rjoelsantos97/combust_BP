@@ -125,8 +125,11 @@ if uploaded_file is not None:
     custos_combustivel_raw = pd.read_excel(uploaded_file)
     dados_processados = processar_dados(custos_combustivel_raw)
     
+    # Exibir os dados processados na app
+    st.write("Dados Processados:")
+    st.dataframe(dados_processados)
 
-#Only display the download button if dados_processados has been set with processed data
+
 
 if dados_processados is not None:
     st.download_button(
