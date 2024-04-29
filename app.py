@@ -108,7 +108,7 @@ uploaded_file_custos = st.file_uploader("Faça upload ao ficheiro excel da BP", 
 if uploaded_file_custos:
     st.session_state.uploaded_file_custos = uploaded_file_custos
 
-if st.button('Process Data') and 'uploaded_file_custos' in st.session_state:
+if st.button('Executar') and 'uploaded_file_custos' in st.session_state:
     dados_frota = pd.read_excel('FROTA_DETALHES.xlsx')
     custos_combustivel_raw = pd.read_excel(st.session_state.uploaded_file_custos)
     processed_data = process_data(dados_frota, custos_combustivel_raw)
