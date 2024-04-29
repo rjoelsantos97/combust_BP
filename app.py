@@ -120,14 +120,7 @@ if st.button('Process Data') and 'uploaded_file_custos' in st.session_state:
         processed_data.to_excel(towrite, index=False, engine='openpyxl')  # Write DataFrame to Excel buffer
         towrite.seek(0)  # Go to the beginning of the BytesIO object after writing
         st.session_state.towrite = towrite  # Save the buffer in session_state for later use
-
-        # Download button for the Excel file
-        st.download_button(
-            "Download Processed Data as Excel",
-            st.session_state.towrite,
-            "processed_data.xlsx",
-            "application/vnd.ms-excel"
-        )
+        st.download_button("Baixar arquivo Excel processado", towrite, "resultado_stock_minimo.xlsx", "application/vnd.ms-excel")
 
 # Clear the session state if the file is not uploaded
 if 'uploaded_file_custos' not in st.session_state:
