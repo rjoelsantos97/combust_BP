@@ -4,17 +4,33 @@ import requests
 from io import BytesIO
 
 
-# Configuração da página e tema
+# Configuração da página
 st.set_page_config(
     page_title='Análise de Extratos BP & Via Verde',
     layout='wide',  # Adjust as needed
-    initial_sidebar_state='expanded',  # Adjust as needed
-    theme='light',  # Change 'light' to 'dark' if you prefer dark mode
-    primaryColor='#0000ff',
-    backgroundColor='#00ff00',
-    secondaryBackgroundColor='#ffff00',
-    textColor='#ffffff',
-    font='sans serif'
+    initial_sidebar_state='expanded'  # Adjust as needed
+)
+
+# Custom CSS styles for theme-like configuration
+st.markdown(
+    """
+    <style>
+        body {
+            background-color: #00ff00; /* Background color */
+            color: #ffffff; /* Text color */
+            font-family: sans-serif; /* Font family */
+        }
+        .sidebar .sidebar-content {
+            background-color: #ffff00; /* Sidebar background color */
+        }
+        .css-1vzks9b.e1wg9kgz0 { /* Adjust selector as needed for button color */
+            background-color: #0000ff !important; /* Button background color */
+            color: #ffffff !important; /* Button text color */
+        }
+        /* Add more custom styles as needed */
+    </style>
+    """,
+    unsafe_allow_html=True
 )
 
 
