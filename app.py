@@ -1,6 +1,18 @@
 import streamlit as st
-import pandas as pd
+from PIL import Image
+import requests
 from io import BytesIO
+
+# Carregar uma imagem via URL
+url = 'https://raw.githubusercontent.com/rjoelsantos97/combust_BP/af90fcddd50b89e2b4dbda681d2e25ba5b93bd3f/logo.png'  # Substitua pelo URL real da imagem
+response = requests.get(url)
+image = Image.open(BytesIO(response.content))
+
+# Mostrar a imagem (logotipo) no Streamlit
+st.image(image, width=200)  # Ajuste a largura conforme necessário
+
+
+
 
 # Função para processar dados de portagens
 def processar_portagens(portagens_path):
