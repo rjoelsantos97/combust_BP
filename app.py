@@ -3,18 +3,35 @@ from PIL import Image
 import requests
 from io import BytesIO
 
-# Configuração da página e tema
+# Custom CSS styles
+st.markdown(
+    """
+    <style>
+        body {
+            background-color: #00ff00; /* background color */
+            color: #ffffff; /* text color */
+            font-family: sans-serif; /* font family */
+        }
+        .stSidebar { 
+            background-color: #ffff00 !important; /* sidebar background color */
+        }
+        .stButton>button {
+            background-color: #0000ff !important; /* button background color */
+            color: #ffffff !important; /* button text color */
+        }
+        /* Add more custom styles as needed */
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Configuração da página
 st.set_page_config(
     page_title='Análise de Extratos BP & Via Verde',
     layout='wide',  # Adjust as needed
-    initial_sidebar_state='expanded',  # Adjust as needed
-    theme='light',  # Change 'light' to 'dark' if you prefer dark mode
-    primaryColor='#0000ff',
-    backgroundColor='#00ff00',
-    secondaryBackgroundColor='#ffff00',
-    textColor='#ffffff',
-    font='sans serif'
+    initial_sidebar_state='expanded'  # Adjust as needed
 )
+
 
 
 # Carregar uma imagem via URL
