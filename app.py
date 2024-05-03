@@ -4,35 +4,6 @@ import requests
 from io import BytesIO
 
 
-# Configuração da página
-st.set_page_config(
-    page_title='Análise de Extratos BP & Via Verde',
-    layout='wide',  # Adjust as needed
-    initial_sidebar_state='expanded'  # Adjust as needed
-)
-
-# Custom CSS styles for theme-like configuration
-st.markdown(
-    """
-    <style>
-        body {
-            background-color: #00ff00; /* Background color */
-            color: #ffffff; /* Text color */
-            font-family: sans-serif; /* Font family */
-        }
-        .sidebar .sidebar-content {
-            background-color: #ffff00; /* Sidebar background color */
-        }
-        .css-1vzks9b.e1wg9kgz0 { /* Adjust selector as needed for button color */
-            background-color: #0000ff !important; /* Button background color */
-            color: #ffffff !important; /* Button text color */
-        }
-        /* Add more custom styles as needed */
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 
 # Carregar uma imagem via URL
 url = 'https://raw.githubusercontent.com/rjoelsantos97/combust_BP/af90fcddd50b89e2b4dbda681d2e25ba5b93bd3f/logo.png'  # Substitua pelo URL real da imagem
