@@ -21,7 +21,9 @@ def processar_portagens(portagens_path):
         'Ligeiro Mercadorias': 'C62511131006'
     })
     final_df['QTD'] = 1
-    final_df['IVA incluido'] = final_df['Categoria'].map(lambda x: 'Sim' if x['Categoria'] == 'Ligeiro Passageiros' else 'Não')
+    final_df['IVA incluido'] = final_df['Categoria'].map(
+        lambda x: 'Sim' if x == 'Ligeiro Passageiros' else 'Não'
+    )
     final_df = final_df[['Ref', 'Matricula', 'Centro analitico', 'QTD', 'Valor Apresentado', 'TAXA IVA', 'IVA incluido']]
     return final_df
 
