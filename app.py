@@ -3,6 +3,14 @@ from PIL import Image
 import requests
 from io import BytesIO
 
+
+# Configuração da página
+st.set_page_config(
+    page_title='Análise de Extratos BP & Via Verde',
+    layout='wide',  # Adjust as needed
+    initial_sidebar_state='expanded'  # Adjust as needed
+)
+
 # Custom CSS styles
 st.markdown(
     """
@@ -25,12 +33,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Configuração da página
-st.set_page_config(
-    page_title='Análise de Extratos BP & Via Verde',
-    layout='wide',  # Adjust as needed
-    initial_sidebar_state='expanded'  # Adjust as needed
-)
 
 
 
