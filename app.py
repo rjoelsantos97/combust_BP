@@ -3,6 +3,20 @@ from PIL import Image
 import requests
 from io import BytesIO
 
+
+# Configuração da página e tema
+st.set_page_config(page_title='Análise de Extratos BP & Via Verde', layout='wide', initial_sidebar_state='expanded')
+st.experimental_set_theme({
+    'primaryColor': '#0000ff',
+    'backgroundColor': '#00ff00',
+    'secondaryBackgroundColor': '#ffff00',
+    'textColor': '#ffffff',
+    'font': 'sans serif'
+})
+
+
+
+
 # Carregar uma imagem via URL
 url = 'https://raw.githubusercontent.com/rjoelsantos97/combust_BP/af90fcddd50b89e2b4dbda681d2e25ba5b93bd3f/logo.png'  # Substitua pelo URL real da imagem
 response = requests.get(url)
