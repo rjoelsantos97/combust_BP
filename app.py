@@ -1,19 +1,21 @@
 import streamlit as st
 import pandas as pd
-from io import BytesIO  # Import BytesIO for in-memory data handling
+from io import BytesIO
 
-# Definir função para processar dados de portagens
+# Função para processar dados de portagens
 def processar_portagens(portagens_path):
     frota_df = pd.read_excel('FROTA_DETALHES.xlsx')
     portagens_df = pd.read_csv(portagens_path, skiprows=7, sep=';', encoding='ISO-8859-1')
     portagens_df['VALOR'] = portagens_df['VALOR'].str.replace(',', '.').astype(float)
     portagens_df['TAXA IVA'] = portagens_df['TAXA IVA'].astype(str).str.replace(',', '.').astype(float)
     aggregated_portagens = portagens_df.groupby(['MATRÍCULA', 'TAXA IVA']).sum().reset_index()
-    final_df = pd.merge(aggregated_portagens, frota_df[['Matricula', 'Categoria', 'Centro analitico']], left_on='MATRÍCULA', right_on='Matricula', how='left')
+    final_df = pd.merge(aggregated_portagens, frota_df[['Matricula', 'Categoria', 'Centro analitico']], 
+                        left_on='MATRÍCULA', right_on='Matricula', how='left')
     final_df['Matricula'].fillna('Sem Matrícula', inplace=True)
     final_df['Centro analitico'].fillna(0, inplace=True)
     final_df['Categoria'].fillna('Ligeiro Mercadorias', inplace=True)
-    final_df['Valor Apresentado'] = final_df.apply(lambda x: x['VALOR'] if x['Categoria'] == 'Ligeiro Passageiros' else x['VALOR'] / (1 + x['TAXA IVA']/100), axis=1)
+    final_df['Valor Apresentado'] = final_df.apply(
+        lambda x: x['VALOR'] if x['Categoria'] == 'Ligeiro Passageiros' else x['VALOR'] / (1 + x['TAXA IVA']/100), axis=1)
     final_df['Ref'] = final_df['Categoria'].map({
         'Ligeiro Passageiros': 'C62511132106',
         'Ligeiro Mercadorias': 'C62511131006'
@@ -23,14 +25,8 @@ def processar_portagens(portagens_path):
     final_df = final_df[['Ref', 'Matricula', 'Centro analitico', 'QTD', 'Valor Apresentado', 'TAXA IVA', 'IVA incluido']]
     return final_df
 
-# Streamlit app layout
-st.title('Análise de Custos Veiculares')
-
-# Create a tab bar with options
-tab1, tab2 = st.tabs(["Análise BP", "Análise Via Verde"])
-
-with tab1:
-    def process_data(frota, custos):
+# Define the function to process the data
+def process_data(frota, custos):
     # Mapeamento de matrículas para categorias e centros analíticos
     mapa_categoria = frota.set_index('Matricula')['Categoria'].to_dict()
     mapa_centro_analitico = frota.set_index('Matricula')['Centro analitico'].to_dict()
@@ -130,48 +126,39 @@ with tab1:
 
 
     return custos_combustivel_final  # Return the aggregated DataFrame
+
+
+
+# Layout principal do Streamlit
+st.title('Análise de Custos Veiculares')
+tab1, tab2 = st.tabs(["Análise BP", "Análise Via Verde"])
+
+# Tab de Análise BP
+with tab1:
     st.header("Análise de Combustíveis BP")
     uploaded_file_custos = st.file_uploader("Faça upload do ficheiro excel da BP", type='xlsx')
     if uploaded_file_custos:
-        st.session_state.uploaded_file_custos = uploaded_file_custos
-
-    if st.button('Executar BP') and 'uploaded_file_custos' in st.session_state:
         dados_frota = pd.read_excel('FROTA_DETALHES.xlsx')
-        custos_combustivel_raw = pd.read_excel(st.session_state.uploaded_file_custos)
+        custos_combustivel_raw = pd.read_excel(uploaded_file_custos)
         processed_data = process_data(dados_frota, custos_combustivel_raw)
-
         if not processed_data.empty:
             st.success('Processamento de BP efectuado com sucesso !')
             st.dataframe(processed_data)
-
-            # Create an in-memory bytes buffer for the processed Excel file
             towrite = BytesIO()
-            processed_data.to_excel(towrite, index=False, engine='openpyxl')  # Write DataFrame to Excel buffer
-            towrite.seek(0)  # Go to the beginning of the BytesIO object after writing
+            processed_data.to_excel(towrite, index=False, engine='openpyxl')
+            towrite.seek(0)
             st.download_button("Descarregue aqui o arquivo BP", towrite, "resultado_bp.xlsx", "application/vnd.ms-excel")
 
+# Tab de Análise Via Verde
 with tab2:
     st.header("Análise Via Verde")
     uploaded_file_portagens = st.file_uploader("Faça upload do ficheiro de extracto de portagens", type=['csv'])
     if uploaded_file_portagens:
-        st.session_state.uploaded_file_portagens = uploaded_file_portagens
-
-    if st.button('Executar Via Verde') and 'uploaded_file_portagens' in st.session_state:
         result_portagens = processar_portagens(uploaded_file_portagens)
-
         if not result_portagens.empty:
             st.success('Processamento de Via Verde efectuado com sucesso !')
             st.dataframe(result_portagens)
-
-            # Excel download
             towrite = BytesIO()
             result_portagens.to_excel(towrite, index=False, engine='openpyxl')
             towrite.seek(0)
             st.download_button("Descarregue aqui o arquivo Via Verde", towrite, "resultado_via_verde.xlsx", "application/vnd.ms-excel")
-
-# Clear the session state if the file is not uploaded
-if 'uploaded_file_custos' not in st.session_state:
-    st.session_state.uploaded_file_custos = None
-if 'uploaded_file_portagens' not in st.session_state:
-    st.session_state.uploaded_file_portagens = None
-
