@@ -132,7 +132,7 @@ def process_data(frota, custos):
 
 
 # Layout principal do Streamlit
-st.title('Análise de Custos Veiculares')
+st.title('Análise de Extratos BP & Via Verde')
 tab1, tab2 = st.tabs(["Análise BP", "Análise Via Verde"])
 
 # Tab de Análise BP
