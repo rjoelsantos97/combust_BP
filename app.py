@@ -4,17 +4,6 @@ import requests
 from io import BytesIO
 
 
-# Configuração da página e tema
-st.set_page_config(page_title='Análise de Extratos BP & Via Verde', layout='wide', initial_sidebar_state='expanded')
-st.experimental_set_theme({
-    'primaryColor': '#0000ff',
-    'backgroundColor': '#00ff00',
-    'secondaryBackgroundColor': '#ffff00',
-    'textColor': '#ffffff',
-    'font': 'sans serif'
-})
-
-
 
 
 # Carregar uma imagem via URL
@@ -155,6 +144,17 @@ def process_data(frota, custos):
 
     return custos_combustivel_final  # Return the aggregated DataFrame
 
+
+
+# Configuração da página e tema
+st.set_page_config(page_title='Análise de Extratos BP & Via Verde', layout='wide', initial_sidebar_state='expanded')
+st.experimental_set_theme({
+    'primaryColor': '#0000ff',
+    'backgroundColor': '#00ff00',
+    'secondaryBackgroundColor': '#ffff00',
+    'textColor': '#ffffff',
+    'font': 'sans serif'
+})
 
 
 # Layout principal do Streamlit
