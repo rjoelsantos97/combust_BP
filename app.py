@@ -11,7 +11,7 @@ response = requests.get(url)
 image = Image.open(BytesIO(response.content))
 
 # Mostrar a imagem (logotipo) no Streamlit
-st.image(image, width=150)  # Ajuste a largura conforme necessário
+st.image(image, width=250)  # Ajuste a largura conforme necessário
 
 
 
