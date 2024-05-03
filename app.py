@@ -4,16 +4,17 @@ import requests
 from io import BytesIO
 
 # Configuração da página e tema
-st.set_page_config(page_title='Análise de Extratos BP & Via Verde', layout='wide', initial_sidebar_state='expanded')
-st.experimental_set_theme({
-    'primaryColor': '#0000ff',
-    'backgroundColor': '#00ff00',
-    'secondaryBackgroundColor': '#ffff00',
-    'textColor': '#ffffff',
-    'font': 'sans serif'
-})
-
-
+st.set_page_config(
+    page_title='Análise de Extratos BP & Via Verde',
+    layout='wide',  # Adjust as needed
+    initial_sidebar_state='expanded',  # Adjust as needed
+    theme='light',  # Change 'light' to 'dark' if you prefer dark mode
+    primaryColor='#0000ff',
+    backgroundColor='#00ff00',
+    secondaryBackgroundColor='#ffff00',
+    textColor='#ffffff',
+    font='sans serif'
+)
 
 
 # Carregar uma imagem via URL
