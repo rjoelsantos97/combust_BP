@@ -28,7 +28,7 @@ def processar_portagens(portagens_path):
                         left_on='MATRÍCULA', right_on='Matricula', how='left')
     final_df['Matricula'].fillna('Sem Matrícula', inplace=True)
     final_df['Centro analitico'].fillna(0, inplace=True)
-    final_df['Centro analitico'] = final_df['Centro analitico'].apply(lambda x: str(x).zfill(2))
+    final_df['Centro analitico'] = final_df['Centro analitico'].apply(lambda x: f"{int(x):02d}")
     final_df['Categoria'].fillna('Ligeiro Mercadorias', inplace=True)
     final_df['Valor Apresentado'] = final_df.apply(
         lambda x: x['VALOR'] if x['Categoria'] == 'Ligeiro Passageiros' else x['VALOR'] / (1 + x['TAXA IVA']/100), axis=1)
