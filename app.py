@@ -28,6 +28,7 @@ def processar_portagens(portagens_path):
                         left_on='MATRÍCULA', right_on='Matricula', how='left')
     final_df['Matricula'].fillna('Sem Matrícula', inplace=True)
     final_df['Centro analitico'].fillna(0, inplace=True)
+    final_df['Centro analitico'] = final_df['Centro analitico'].astype(str).str.zfill(2)
     final_df['Categoria'].fillna('Ligeiro Mercadorias', inplace=True)
     final_df['Valor Apresentado'] = final_df.apply(
         lambda x: x['VALOR'] if x['Categoria'] == 'Ligeiro Passageiros' else x['VALOR'] / (1 + x['TAXA IVA']/100), axis=1)
@@ -108,6 +109,7 @@ def process_data(frota, custos):
     
     # Adicionar informações de 'FROTA_DETALHES' e outras colunas necessárias
     custos_agregados['Centro analitico'] = custos_agregados['Matrícula'].apply(buscar_centro_analitico)
+    custos_agregados['Centro analitico'] = custos_agregados['Centro analitico'].astype(str).str.zfill(2)
     custos_agregados['Categoria'] = custos_agregados['Matrícula'].apply(buscar_categoria)
     custos_agregados['REF'] = custos_agregados.apply(
         lambda row: determinar_codigo(row['Produto'], row['Categoria']),
