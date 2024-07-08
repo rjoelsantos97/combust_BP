@@ -143,7 +143,7 @@ def editar_frota_detalhes(frota_df):
     st.subheader('Editar Frota Detalhes')
     edited_df = st.data_editor(frota_df, num_rows="dynamic")
     if st.button('Salvar Alterações'):
-        edited_df.to_excel('FROTA_DETALHES_EDITADO.xlsx', index=False)
+        edited_df.to_excel('FROTA_DETALHES.xlsx', index=False)  # Substitui o arquivo original
         st.success('Alterações salvas com sucesso!')
     return edited_df
 
