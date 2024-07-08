@@ -140,7 +140,7 @@ def process_data(frota, custos):
 
 # Função para permitir edição do dataframe no Streamlit
 def editar_frota_detalhes(frota_df):
-    st.subheader('Editar Frota Detalhes')
+    st.subheader('Editar dados Frota - NAPS')
     edited_df = st.data_editor(frota_df, num_rows="dynamic")
     if st.button('Salvar Alterações'):
         edited_df.to_excel('FROTA_DETALHES.xlsx', index=False)  # Substitui o arquivo original
@@ -149,7 +149,7 @@ def editar_frota_detalhes(frota_df):
 
 # Layout principal do Streamlit
 st.title('Análise de Extratos BP & Via Verde')
-tab1, tab2, tab3 = st.tabs(["Análise BP", "Análise Via Verde", "Editar Frota Detalhes"])
+tab1, tab2, tab3 = st.tabs(["Análise BP", "Análise Via Verde", "Editar dados Frota - NAPS"])
 
 # Tab de Análise BP
 with tab1:
