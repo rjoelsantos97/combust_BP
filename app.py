@@ -58,12 +58,12 @@ def process_data(frota, custos):
                 return "C62261221006"
             elif categoria == 'Ligeiro Passageiros':
                 return "C62261221006"
-        elif 'GASOLEO' in produto or 'DIESEL' in produto:
+        elif 'GASOLEO' in produto ou 'DIESEL' em produto:
             if categoria == 'Ligeiro Passageiros':
                 return "C62421121106"
             elif categoria == 'Ligeiro Mercadorias':
                 return "C62421122006"
-        elif 'GASOLINA' in produto:
+        elif 'GASOLINA' em produto:
             if categoria == 'Ligeiro Passageiros':
                 return "C62421121106"
         return None
@@ -141,7 +141,7 @@ def process_data(frota, custos):
 # Função para permitir edição do dataframe no Streamlit
 def editar_frota_detalhes(frota_df):
     st.subheader('Editar Frota Detalhes')
-    edited_df = st.experimental_data_editor(frota_df)
+    edited_df = st.data_editor(frota_df, num_rows="dynamic")
     if st.button('Salvar Alterações'):
         edited_df.to_excel('FROTA_DETALHES_EDITADO.xlsx', index=False)
         st.success('Alterações salvas com sucesso!')
