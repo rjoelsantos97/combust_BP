@@ -150,7 +150,7 @@ def editar_frota_detalhes(frota_df):
 # Função de autenticação
 def check_password():
     def password_entered():
-        if st.session_state["password"] == "secreta":
+        if st.session_state["password"] == "Frotanaps2024":
             st.session_state["password_correct"] = True
             del st.session_state["password"]  # remove the password from memory
         else:
@@ -171,7 +171,7 @@ def check_password():
 
 # Layout principal do Streamlit
 st.title('Análise de Extratos BP & Via Verde')
-tab1, tab2, tab3 = st.tabs(["Análise BP", "Análise Via Verde", "Editar Frota Detalhes"])
+tab1, tab2, tab3 = st.tabs(["Análise BP", "Análise Via Verde", "Editar detalhe frota - Naps"])
 
 # Tab de Análise BP
 with tab1:
