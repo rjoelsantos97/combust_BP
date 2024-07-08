@@ -183,6 +183,6 @@ with tab2:
 
 # Tab de Editar Frota Detalhes
 with tab3:
-    st.header("Editar detalhe da frota Naps")
+    st.header("Editar Frota Detalhes")
     frota_df = pd.read_excel('FROTA_DETALHES.xlsx')
     edited_frota_df = editar_frota_detalhes(frota_df)
