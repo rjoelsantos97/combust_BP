@@ -58,7 +58,7 @@ def process_data(frota, custos):
                 return "C62261221006"
             elif categoria == 'Ligeiro Passageiros':
                 return "C62261221006"
-        elif 'GASOLEO' in produto ou 'DIESEL' em produto:
+        elif 'GASOLEO' in produto or 'DIESEL' em produto:
             if categoria == 'Ligeiro Passageiros':
                 return "C62421121106"
             elif categoria == 'Ligeiro Mercadorias':
