@@ -4,8 +4,6 @@ from PIL import Image
 import requests
 from io import BytesIO
 
-
-
 # Carregar uma imagem via URL
 url = 'https://raw.githubusercontent.com/rjoelsantos97/combust_BP/af90fcddd50b89e2b4dbda681d2e25ba5b93bd3f/logo.png'  # Substitua pelo URL real da imagem
 response = requests.get(url)
@@ -13,9 +11,6 @@ image = Image.open(BytesIO(response.content))
 
 # Mostrar a imagem (logotipo) no Streamlit
 st.image(image, width=250)  # Ajuste a largura conforme necessário
-
-
-
 
 # Função para processar dados de portagens
 def processar_portagens(portagens_path):
@@ -72,7 +67,6 @@ def process_data(frota, custos):
             if categoria == 'Ligeiro Passageiros':
                 return "C62421121106"
         return None
-
 
     def calcular_valor(categoria, valor_liquido):
         """ Calcula o valor ajustado com base na categoria do veículo. """
@@ -138,20 +132,24 @@ def process_data(frota, custos):
     colunas_output = ['REF', 'QTD', 'Valor Ajustado',  
                       'Matrícula', 'Centro analitico','IVA Incluído', 'Observação','Produto']
     
-        # Filter out rows where the observation is "Não - NAPS"
+    # Filter out rows where the observation is "Não - NAPS"
     custos_agregados = custos_agregados[custos_agregados['Observação'] != 'Não - NAPS']
     custos_combustivel_final = custos_agregados[colunas_output]
     
-
-
     return custos_combustivel_final  # Return the aggregated DataFrame
 
-
-
+# Função para permitir edição do dataframe no Streamlit
+def editar_frota_detalhes(frota_df):
+    st.subheader('Editar Frota Detalhes')
+    edited_df = st.experimental_data_editor(frota_df)
+    if st.button('Salvar Alterações'):
+        edited_df.to_excel('FROTA_DETALHES_EDITADO.xlsx', index=False)
+        st.success('Alterações salvas com sucesso!')
+    return edited_df
 
 # Layout principal do Streamlit
 st.title('Análise de Extratos BP & Via Verde')
-tab1, tab2 = st.tabs(["Análise BP", "Análise Via Verde"])
+tab1, tab2, tab3 = st.tabs(["Análise BP", "Análise Via Verde", "Editar Frota Detalhes"])
 
 # Tab de Análise BP
 with tab1:
@@ -182,3 +180,9 @@ with tab2:
             result_portagens.to_excel(towrite, index=False, engine='openpyxl')
             towrite.seek(0)
             st.download_button("Descarregue aqui o arquivo Via Verde", towrite, "resultado_via_verde.xlsx", "application/vnd.ms-excel")
+
+# Tab de Editar Frota Detalhes
+with tab3:
+    st.header("Editar detalhe da frota Naps")
+    frota_df = pd.read_excel('FROTA_DETALHES.xlsx')
+    edited_frota_df = editar_frota_detalhes(frota_df)
