@@ -140,16 +140,38 @@ def process_data(frota, custos):
 
 # Função para permitir edição do dataframe no Streamlit
 def editar_frota_detalhes(frota_df):
-    st.subheader('Editar dados Frota - NAPS')
+    st.subheader('Editar Frota Detalhes')
     edited_df = st.data_editor(frota_df, num_rows="dynamic")
     if st.button('Salvar Alterações'):
         edited_df.to_excel('FROTA_DETALHES.xlsx', index=False)  # Substitui o arquivo original
         st.success('Alterações salvas com sucesso!')
     return edited_df
 
+# Função de autenticação
+def check_password():
+    def password_entered():
+        if st.session_state["password"] == "secreta":
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]  # remove the password from memory
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        # First run, show input for password.
+        st.text_input("Password", type="password", on_change=password_entered, key="password")
+        return False
+    elif not st.session_state["password_correct"]:
+        # Password not correct, show input + error.
+        st.text_input("Password", type="password", on_change=password_entered, key="password")
+        st.error("Password incorreta")
+        return False
+    else:
+        # Password correct.
+        return True
+
 # Layout principal do Streamlit
 st.title('Análise de Extratos BP & Via Verde')
-tab1, tab2, tab3 = st.tabs(["Análise BP", "Análise Via Verde", "Editar dados Frota - NAPS"])
+tab1, tab2, tab3 = st.tabs(["Análise BP", "Análise Via Verde", "Editar Frota Detalhes"])
 
 # Tab de Análise BP
 with tab1:
@@ -184,5 +206,6 @@ with tab2:
 # Tab de Editar Frota Detalhes
 with tab3:
     st.header("Editar detalhe frota - Naps")
-    frota_df = pd.read_excel('FROTA_DETALHES.xlsx')
-    edited_frota_df = editar_frota_detalhes(frota_df)
+    if check_password():
+        frota_df = pd.read_excel('FROTA_DETALHES.xlsx')
+        edited_frota_df = editar_frota_detalhes(frota_df)
