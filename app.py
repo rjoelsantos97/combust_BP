@@ -17,6 +17,7 @@ def processar_portagens(portagens_path):
     frota_df = pd.read_excel('FROTA_DETALHES.xlsx')
     portagens_df = pd.read_csv(portagens_path, skiprows=7, sep=';', encoding='ISO-8859-1')
     portagens_df['VALOR'] = portagens_df['VALOR'].str.replace(',', '.').astype(float)
+    portagens_df['TAXA IVA'] = portagens_df['TAXA IVA'].replace('*', '0')  # Substitui o * por 0
     portagens_df['TAXA IVA'] = portagens_df['TAXA IVA'].astype(str).str.replace(',', '.').astype(float)
     aggregated_portagens = portagens_df.groupby(['MATRÍCULA', 'TAXA IVA']).sum().reset_index()
     final_df = pd.merge(aggregated_portagens, frota_df[['Matricula', 'Categoria', 'Centro analitico']], 
